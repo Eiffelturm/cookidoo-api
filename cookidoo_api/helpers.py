@@ -45,7 +45,7 @@ from cookidoo_api.types import (
     CookidooShoppingRecipe,
     CookidooShoppingRecipeDetails,
     CookidooSubscription,
-    CookidooUserInfo,
+    CookidooUserInfo, CookidooStepGroup, CookidooRecipeStep,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -54,7 +54,7 @@ localization_file_path = os.path.join(os.path.dirname(__file__), "localization.j
 
 
 def cookidoo_auth_data_from_json(
-    auth_data: AuthResponseJSON,
+        auth_data: AuthResponseJSON,
 ) -> CookidooAuthResponse:
     """Convert a auth data received from the API to a cookidoo auth data."""
     return CookidooAuthResponse(
@@ -67,7 +67,7 @@ def cookidoo_auth_data_from_json(
 
 
 def cookidoo_user_info_from_json(
-    user_info: UserInfoJSON,
+        user_info: UserInfoJSON,
 ) -> CookidooUserInfo:
     """Convert a user info received from the API to a cookidoo user info."""
     return CookidooUserInfo(
@@ -78,7 +78,7 @@ def cookidoo_user_info_from_json(
 
 
 def cookidoo_subscription_from_json(
-    subscription: SubscriptionJSON,
+        subscription: SubscriptionJSON,
 ) -> CookidooSubscription:
     """Convert a subscription received from the API to a cookidoo subscription."""
     return CookidooSubscription(
@@ -94,7 +94,7 @@ def cookidoo_subscription_from_json(
 
 
 def cookidoo_collection_from_json(
-    collection: CustomCollectionJSON | ManagedCollectionJSON,
+        collection: CustomCollectionJSON | ManagedCollectionJSON,
 ) -> CookidooCollection:
     """Convert a collection received from the API to a cookidoo collection."""
     return CookidooCollection(
@@ -135,7 +135,7 @@ def _process_image_url(url: str) -> tuple[str, str]:
 
 
 def _extract_images_from_descriptive_assets(
-    descriptive_assets: list[DescriptiveAssetJSON],
+        descriptive_assets: list[DescriptiveAssetJSON],
 ) -> tuple[str | None, str | None]:
     """Extract thumbnail and image URLs from descriptive assets.
 
@@ -164,9 +164,9 @@ def _extract_images_from_descriptive_assets(
 
 
 def _construct_recipe_url(
-    localization: CookidooLocalizationConfig | None,
-    recipe_id: str,
-    path_prefix: str = "recipes/recipe",
+        localization: CookidooLocalizationConfig | None,
+        recipe_id: str,
+        path_prefix: str = "recipes/recipe",
 ) -> str:
     """Construct a recipe URL from localization config and recipe ID.
 
@@ -194,8 +194,8 @@ def _construct_recipe_url(
 
 
 def cookidoo_recipe_from_json(
-    recipe: RecipeJSON,
-    localization: CookidooLocalizationConfig | None = None,
+        recipe: RecipeJSON,
+        localization: CookidooLocalizationConfig | None = None,
 ) -> CookidooShoppingRecipe:
     """Convert a shopping recipe received from the API to a cookidoo shopping recipe."""
     thumbnail, image = None, None
@@ -218,13 +218,13 @@ def cookidoo_recipe_from_json(
 
 
 def cookidoo_quantity_from_json(
-    quantity: QuantityJSON,
+        quantity: QuantityJSON,
 ) -> str:
     """Convert an quantity received from the API to a str."""
     if "value" in quantity and quantity["value"]:
         return str(quantity["value"])
     elif (
-        "from" in quantity and "to" in quantity and quantity["from"] and quantity["to"]
+            "from" in quantity and "to" in quantity and quantity["from"] and quantity["to"]
     ):
         return f"{quantity['from']} - {quantity['to']}"
     else:
@@ -232,8 +232,8 @@ def cookidoo_quantity_from_json(
 
 
 def cookidoo_recipe_details_from_json(
-    recipe: RecipeDetailsJSON,
-    localization: CookidooLocalizationConfig | None = None,
+        recipe: RecipeDetailsJSON,
+        localization: CookidooLocalizationConfig | None = None,
 ) -> CookidooShoppingRecipeDetails:
     """Convert an recipe details received from the API to a cookidoo recipe details."""
     thumbnail, image = None, None
@@ -302,6 +302,11 @@ def cookidoo_recipe_details_from_json(
             )
             for ng in recipe.get("nutritionGroups", [])
         ],
+        step_groups=[CookidooStepGroup(
+            title=sg["title"],
+            recipe_steps=[CookidooRecipeStep(title=rs["title"], formatted_text=rs["formattedText"]) for rs in
+                          sg["recipeSteps"]]
+        ) for sg in recipe.get("recipeStepGroups", [])],
         thumbnail=thumbnail,
         image=image,
         url=url,
@@ -309,8 +314,8 @@ def cookidoo_recipe_details_from_json(
 
 
 def cookidoo_custom_recipe_from_json(
-    recipe: CustomRecipeJSON,
-    localization: CookidooLocalizationConfig | None = None,
+        recipe: CustomRecipeJSON,
+        localization: CookidooLocalizationConfig | None = None,
 ) -> CookidooCustomRecipe:
     """Convert a custom recipe received from the API to a cookidoo custom recipe."""
     total_time = isodate.parse_duration(
@@ -346,7 +351,7 @@ def cookidoo_custom_recipe_from_json(
 
 
 def cookidoo_ingredient_from_json(
-    ingredient: IngredientJSON | ItemJSON,
+        ingredient: IngredientJSON | ItemJSON,
 ) -> CookidooIngredient:
     """Convert an ingredient received from the API to a cookidoo ingredient."""
     return CookidooIngredient(
@@ -354,9 +359,9 @@ def cookidoo_ingredient_from_json(
         name=ingredient["ingredientNotation"],
         description=f"{cookidoo_quantity_from_json(ingredient['quantity'])} {ingredient['unitNotation']}"
         if "unitNotation" in ingredient
-        and ingredient["unitNotation"]
-        and "quantity" in ingredient
-        and ingredient["quantity"]
+           and ingredient["unitNotation"]
+           and "quantity" in ingredient
+           and ingredient["quantity"]
         else cookidoo_quantity_from_json(ingredient["quantity"])
         if "quantity" in ingredient and ingredient["quantity"]
         else "",
@@ -364,7 +369,7 @@ def cookidoo_ingredient_from_json(
 
 
 def cookidoo_ingredient_item_from_json(
-    item: ItemJSON,
+        item: ItemJSON,
 ) -> CookidooIngredientItem:
     """Convert an ingredient item received from the API to a cookidoo item."""
     return CookidooIngredientItem(
@@ -373,9 +378,9 @@ def cookidoo_ingredient_item_from_json(
         is_owned=item["isOwned"],
         description=f"{cookidoo_quantity_from_json(item['quantity'])} {item['unitNotation']}"
         if "unitNotation" in item
-        and item["unitNotation"]
-        and "quantity" in item
-        and item["quantity"]
+           and item["unitNotation"]
+           and "quantity" in item
+           and item["quantity"]
         else str(cookidoo_quantity_from_json(item["quantity"]))
         if "quantity" in item and item["quantity"]
         else "",
@@ -383,7 +388,7 @@ def cookidoo_ingredient_item_from_json(
 
 
 def cookidoo_additional_item_from_json(
-    item: AdditionalItemJSON,
+        item: AdditionalItemJSON,
 ) -> CookidooAdditionalItem:
     """Convert an additional item received from the API to a cookidoo item."""
     return CookidooAdditionalItem(
@@ -394,8 +399,8 @@ def cookidoo_additional_item_from_json(
 
 
 def cookidoo_calendar_day_from_json(
-    calendar_day: CalendarDayJSON,
-    localization: CookidooLocalizationConfig | None = None,
+        calendar_day: CalendarDayJSON,
+        localization: CookidooLocalizationConfig | None = None,
 ) -> CookidooCalendarDay:
     """Convert a calendar day received from the API to a cookidoo item."""
     recipes = []
@@ -429,16 +434,16 @@ def cookidoo_calendar_day_from_json(
 
 
 async def __get_localization_options(
-    country: str | None = None,
-    language: str | None = None,
+        country: str | None = None,
+        language: str | None = None,
 ) -> list[CookidooLocalizationConfig]:
     async with aiofiles.open(localization_file_path, encoding="utf-8") as file:
         options_ = cast(list[dict[str, str]], json.loads(await file.read()))
         options = (CookidooLocalizationConfig(**x) for x in options_)
         filtered_options = filter(
             lambda option: (
-                (not country or option.country_code == country)
-                and (not language or option.language == language)
+                    (not country or option.country_code == country)
+                    and (not language or option.language == language)
             ),
             options,
         )
@@ -446,8 +451,8 @@ async def __get_localization_options(
 
 
 async def get_localization_options(
-    country: str | None = None,
-    language: str | None = None,
+        country: str | None = None,
+        language: str | None = None,
 ) -> list[CookidooLocalizationConfig]:
     """Get a list of possible localization options."""
     return await __get_localization_options(country, language)

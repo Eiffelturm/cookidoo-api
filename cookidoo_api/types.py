@@ -237,6 +237,20 @@ class CookidooRecipeNutrition:
 
 
 @dataclass
+class CookidooRecipeStep:
+    """Recipe nutrition type.
+
+    Attributes
+    ----------
+    TODO
+
+    """
+
+    title: str
+    formatted_text: str
+
+
+@dataclass
 class CookidooNutritionGroup:
     """Nutrition group type.
 
@@ -251,6 +265,23 @@ class CookidooNutritionGroup:
 
     name: str
     recipe_nutritions: list[CookidooRecipeNutrition]
+
+
+@dataclass
+class CookidooStepGroup:
+    """Step group type.
+
+    Attributes
+    ----------
+    title
+        The title of the step group
+    recipe_steps
+        List of recipe nutrition objects
+
+    """
+
+    title: str
+    recipe_steps: list[CookidooRecipeStep]
 
 
 @dataclass
@@ -289,6 +320,7 @@ class CookidooShoppingRecipeDetails(CookidooShoppingRecipe):
     active_time: int
     total_time: int
     nutrition_groups: list[CookidooNutritionGroup]
+    step_groups: list[CookidooStepGroup]
 
 
 @dataclass

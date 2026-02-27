@@ -1,11 +1,11 @@
 """Cookidoo api implementation."""
 
-from datetime import date
-from http import HTTPStatus
-from json import JSONDecodeError
 import logging
 import time
 import traceback
+from datetime import date
+from http import HTTPStatus
+from json import JSONDecodeError
 from typing import cast
 
 from aiohttp import ClientError, ClientSession, FormData
@@ -106,9 +106,9 @@ class Cookidoo:
     _auth_data: CookidooAuthResponse | None
 
     def __init__(
-        self,
-        session: ClientSession,
-        cfg: CookidooConfig = CookidooConfig(),
+            self,
+            session: ClientSession,
+            cfg: CookidooConfig = CookidooConfig(),
     ) -> None:
         """Init function for Cookidoo API.
 
@@ -252,7 +252,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.post(
-                url, data=form_data, headers=self._token_headers
+                    url, data=form_data, headers=self._token_headers
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s",
@@ -319,7 +319,7 @@ class Cookidoo:
         return data
 
     async def get_user_info(
-        self,
+            self,
     ) -> CookidooUserInfo:
         """Get user info.
 
@@ -396,7 +396,7 @@ class Cookidoo:
             ) from e
 
     async def get_active_subscription(
-        self,
+            self,
     ) -> CookidooSubscription | None:
         """Get active subscription if any.
 
@@ -447,12 +447,12 @@ class Cookidoo:
 
                 try:
                     if subscription := next(
-                        (
-                            subscription
-                            for subscription in (await r.json())
-                            if subscription["active"]
-                        ),
-                        None,
+                            (
+                                    subscription
+                                    for subscription in (await r.json())
+                                    if subscription["active"]
+                            ),
+                            None,
                     ):
                         return cookidoo_subscription_from_json(subscription)
                     else:
@@ -512,6 +512,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__, id=id
             )
             async with self._session.get(url, headers=self._api_headers) as r:
+                _LOGGER.error("JSON %s", await r.json())
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
                 )
@@ -652,7 +653,7 @@ class Cookidoo:
             ) from e
 
     async def add_custom_recipe_from(
-        self, recipeId: str, servingSize: int
+            self, recipeId: str, servingSize: int
     ) -> CookidooCustomRecipe:
         """Add custom recipe.
 
@@ -690,11 +691,11 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.post(
-                url,
-                headers={
-                    **self._api_headers,
-                },
-                json=json_data,
+                    url,
+                    headers={
+                        **self._api_headers,
+                    },
+                    json=json_data,
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -751,8 +752,8 @@ class Cookidoo:
             ) from e
 
     async def remove_custom_recipe(
-        self,
-        custom_recipe_id: str,
+            self,
+            custom_recipe_id: str,
     ) -> None:
         """Remove custom recipe.
 
@@ -776,10 +777,10 @@ class Cookidoo:
                 **self._cfg.localization.__dict__, id=custom_recipe_id
             )
             async with self._session.delete(
-                url,
-                headers={
-                    **self._api_headers,
-                },
+                    url,
+                    headers={
+                        **self._api_headers,
+                    },
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -822,7 +823,7 @@ class Cookidoo:
             ) from e
 
     async def get_shopping_list_recipes(
-        self,
+            self,
     ) -> list[CookidooShoppingRecipe]:
         """Get recipes.
 
@@ -906,7 +907,7 @@ class Cookidoo:
             ) from e
 
     async def get_ingredient_items(
-        self,
+            self,
     ) -> list[CookidooIngredientItem]:
         """Get ingredient items.
 
@@ -989,8 +990,8 @@ class Cookidoo:
             ) from e
 
     async def add_ingredient_items_for_recipes(
-        self,
-        recipe_ids: list[str],
+            self,
+            recipe_ids: list[str],
     ) -> list[CookidooIngredientItem]:
         """Add ingredient items for recipes.
 
@@ -1020,7 +1021,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.post(
-                url, headers=self._api_headers, json=json_data
+                    url, headers=self._api_headers, json=json_data
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -1077,8 +1078,8 @@ class Cookidoo:
             ) from e
 
     async def remove_ingredient_items_for_recipes(
-        self,
-        recipe_ids: list[str],
+            self,
+            recipe_ids: list[str],
     ) -> None:
         """Remove ingredient items for recipes.
 
@@ -1103,7 +1104,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.post(
-                url, headers=self._api_headers, json=json_data
+                    url, headers=self._api_headers, json=json_data
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -1146,8 +1147,8 @@ class Cookidoo:
             ) from e
 
     async def edit_ingredient_items_ownership(
-        self,
-        ingredient_items: list[CookidooIngredientItem],
+            self,
+            ingredient_items: list[CookidooIngredientItem],
     ) -> list[CookidooIngredientItem]:
         """Edit ownership ingredient items.
 
@@ -1186,7 +1187,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.post(
-                url, headers=self._api_headers, json=json_data
+                    url, headers=self._api_headers, json=json_data
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -1243,8 +1244,8 @@ class Cookidoo:
             ) from e
 
     async def add_ingredient_items_for_custom_recipes(
-        self,
-        recipe_ids: list[str],
+            self,
+            recipe_ids: list[str],
     ) -> list[CookidooIngredientItem]:
         """Add ingredient items for custom recipes.
 
@@ -1278,7 +1279,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.post(
-                url, headers=self._api_headers, json=json_data
+                    url, headers=self._api_headers, json=json_data
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -1335,8 +1336,8 @@ class Cookidoo:
             ) from e
 
     async def remove_ingredient_items_for_custom_recipes(
-        self,
-        recipe_ids: list[str],
+            self,
+            recipe_ids: list[str],
     ) -> None:
         """Remove ingredient items for custom recipes.
 
@@ -1361,7 +1362,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.post(
-                url, headers=self._api_headers, json=json_data
+                    url, headers=self._api_headers, json=json_data
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -1404,7 +1405,7 @@ class Cookidoo:
             ) from e
 
     async def get_additional_items(
-        self,
+            self,
     ) -> list[CookidooAdditionalItem]:
         """Get additional items.
 
@@ -1487,8 +1488,8 @@ class Cookidoo:
             ) from e
 
     async def add_additional_items(
-        self,
-        additional_item_names: list[str],
+            self,
+            additional_item_names: list[str],
     ) -> list[CookidooAdditionalItem]:
         """Create additional items.
 
@@ -1518,7 +1519,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.post(
-                url, headers=self._api_headers, json=json_data
+                    url, headers=self._api_headers, json=json_data
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -1577,8 +1578,8 @@ class Cookidoo:
             ) from e
 
     async def edit_additional_items(
-        self,
-        additional_items: list[CookidooAdditionalItem],
+            self,
+            additional_items: list[CookidooAdditionalItem],
     ) -> list[CookidooAdditionalItem]:
         """Edit additional items.
 
@@ -1616,7 +1617,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.post(
-                url, headers=self._api_headers, json=json_data
+                    url, headers=self._api_headers, json=json_data
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -1675,8 +1676,8 @@ class Cookidoo:
             ) from e
 
     async def edit_additional_items_ownership(
-        self,
-        additional_items: list[CookidooAdditionalItem],
+            self,
+            additional_items: list[CookidooAdditionalItem],
     ) -> list[CookidooAdditionalItem]:
         """Edit ownership additional items.
 
@@ -1715,7 +1716,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.post(
-                url, headers=self._api_headers, json=json_data
+                    url, headers=self._api_headers, json=json_data
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -1774,8 +1775,8 @@ class Cookidoo:
             ) from e
 
     async def remove_additional_items(
-        self,
-        additional_item_ids: list[str],
+            self,
+            additional_item_ids: list[str],
     ) -> None:
         """Remove additional items.
 
@@ -1800,7 +1801,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.post(
-                url, headers=self._api_headers, json=json_data
+                    url, headers=self._api_headers, json=json_data
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -1843,7 +1844,7 @@ class Cookidoo:
             ) from e
 
     async def clear_shopping_list(
-        self,
+            self,
     ) -> None:
         """Remove all additional items, ingredients and recipes.
 
@@ -1926,11 +1927,11 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.get(
-                url,
-                headers={
-                    **self._api_headers,
-                    "ACCEPT": MANAGED_COLLECTIONS_PATH_ACCEPT,
-                },
+                    url,
+                    headers={
+                        **self._api_headers,
+                        "ACCEPT": MANAGED_COLLECTIONS_PATH_ACCEPT,
+                    },
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -2017,12 +2018,12 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.get(
-                url,
-                headers={
-                    **self._api_headers,
-                    "ACCEPT": MANAGED_COLLECTIONS_PATH_ACCEPT,
-                },
-                params={"page": page},
+                    url,
+                    headers={
+                        **self._api_headers,
+                        "ACCEPT": MANAGED_COLLECTIONS_PATH_ACCEPT,
+                    },
+                    params={"page": page},
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -2080,8 +2081,8 @@ class Cookidoo:
             ) from e
 
     async def add_managed_collection(
-        self,
-        managed_collection_id: str,
+            self,
+            managed_collection_id: str,
     ) -> CookidooCollection:
         """Add managed collections.
 
@@ -2111,12 +2112,12 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.post(
-                url,
-                headers={
-                    **self._api_headers,
-                    "ACCEPT": MANAGED_COLLECTIONS_PATH_ACCEPT,
-                },
-                json=json_data,
+                    url,
+                    headers={
+                        **self._api_headers,
+                        "ACCEPT": MANAGED_COLLECTIONS_PATH_ACCEPT,
+                    },
+                    json=json_data,
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -2172,8 +2173,8 @@ class Cookidoo:
             ) from e
 
     async def remove_managed_collection(
-        self,
-        managed_collection_id: str,
+            self,
+            managed_collection_id: str,
     ) -> None:
         """Remove managed collection.
 
@@ -2197,11 +2198,11 @@ class Cookidoo:
                 **self._cfg.localization.__dict__, id=managed_collection_id
             )
             async with self._session.delete(
-                url,
-                headers={
-                    **self._api_headers,
-                    "ACCEPT": MANAGED_COLLECTIONS_PATH_ACCEPT,
-                },
+                    url,
+                    headers={
+                        **self._api_headers,
+                        "ACCEPT": MANAGED_COLLECTIONS_PATH_ACCEPT,
+                    },
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -2267,11 +2268,11 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.get(
-                url,
-                headers={
-                    **self._api_headers,
-                    "ACCEPT": CUSTOM_COLLECTIONS_PATH_ACCEPT,
-                },
+                    url,
+                    headers={
+                        **self._api_headers,
+                        "ACCEPT": CUSTOM_COLLECTIONS_PATH_ACCEPT,
+                    },
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -2358,12 +2359,12 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.get(
-                url,
-                headers={
-                    **self._api_headers,
-                    "ACCEPT": CUSTOM_COLLECTIONS_PATH_ACCEPT,
-                },
-                params={"page": page},
+                    url,
+                    headers={
+                        **self._api_headers,
+                        "ACCEPT": CUSTOM_COLLECTIONS_PATH_ACCEPT,
+                    },
+                    params={"page": page},
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -2421,8 +2422,8 @@ class Cookidoo:
             ) from e
 
     async def add_custom_collection(
-        self,
-        custom_collection_name: str,
+            self,
+            custom_collection_name: str,
     ) -> CookidooCollection:
         """Add custom collections.
 
@@ -2452,12 +2453,12 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.post(
-                url,
-                headers={
-                    **self._api_headers,
-                    "ACCEPT": CUSTOM_COLLECTIONS_PATH_ACCEPT,
-                },
-                json=json_data,
+                    url,
+                    headers={
+                        **self._api_headers,
+                        "ACCEPT": CUSTOM_COLLECTIONS_PATH_ACCEPT,
+                    },
+                    json=json_data,
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -2513,8 +2514,8 @@ class Cookidoo:
             ) from e
 
     async def remove_custom_collection(
-        self,
-        custom_collection_id: str,
+            self,
+            custom_collection_id: str,
     ) -> None:
         """Remove custom collection.
 
@@ -2538,11 +2539,11 @@ class Cookidoo:
                 **self._cfg.localization.__dict__, id=custom_collection_id
             )
             async with self._session.delete(
-                url,
-                headers={
-                    **self._api_headers,
-                    "ACCEPT": CUSTOM_COLLECTIONS_PATH_ACCEPT,
-                },
+                    url,
+                    headers={
+                        **self._api_headers,
+                        "ACCEPT": CUSTOM_COLLECTIONS_PATH_ACCEPT,
+                    },
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -2585,9 +2586,9 @@ class Cookidoo:
             ) from e
 
     async def add_recipes_to_custom_collection(
-        self,
-        custom_collection_id: str,
-        recipe_ids: list[str],
+            self,
+            custom_collection_id: str,
+            recipe_ids: list[str],
     ) -> CookidooCollection:
         """Add recipes to a custom collections.
 
@@ -2619,7 +2620,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__, id=custom_collection_id
             )
             async with self._session.put(
-                url, headers=self._api_headers, json=json_data
+                    url, headers=self._api_headers, json=json_data
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -2675,9 +2676,9 @@ class Cookidoo:
             ) from e
 
     async def remove_recipe_from_custom_collection(
-        self,
-        custom_collection_id: str,
-        recipe_id: str,
+            self,
+            custom_collection_id: str,
+            recipe_id: str,
     ) -> CookidooCollection:
         """Remove recipe from a custom collections.
 
@@ -2764,7 +2765,7 @@ class Cookidoo:
             ) from e
 
     async def get_recipes_in_calendar_week(
-        self, day: date
+            self, day: date
     ) -> list[CookidooCalendarDay]:
         """Get recipes in a calendar week.
 
@@ -2852,9 +2853,9 @@ class Cookidoo:
             ) from e
 
     async def add_recipes_to_calendar(
-        self,
-        day: date,
-        recipe_ids: list[str],
+            self,
+            day: date,
+            recipe_ids: list[str],
     ) -> CookidooCalendarDay:
         """Add recipes to a calendar.
 
@@ -2886,7 +2887,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.put(
-                url, headers=self._api_headers, json=json_data
+                    url, headers=self._api_headers, json=json_data
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -2943,9 +2944,9 @@ class Cookidoo:
             ) from e
 
     async def remove_recipe_from_calendar(
-        self,
-        day: date,
-        recipe_id: str,
+            self,
+            day: date,
+            recipe_id: str,
     ) -> CookidooCalendarDay:
         """Remove recipe from calendar.
 
@@ -3033,9 +3034,9 @@ class Cookidoo:
             ) from e
 
     async def add_custom_recipes_to_calendar(
-        self,
-        day: date,
-        recipe_ids: list[str],
+            self,
+            day: date,
+            recipe_ids: list[str],
     ) -> CookidooCalendarDay:
         """Add custom recipes to a calendar.
 
@@ -3071,7 +3072,7 @@ class Cookidoo:
                 **self._cfg.localization.__dict__
             )
             async with self._session.put(
-                url, headers=self._api_headers, json=json_data
+                    url, headers=self._api_headers, json=json_data
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
@@ -3128,9 +3129,9 @@ class Cookidoo:
             ) from e
 
     async def remove_custom_recipe_from_calendar(
-        self,
-        day: date,
-        recipe_id: str,
+            self,
+            day: date,
+            recipe_id: str,
     ) -> CookidooCalendarDay:
         """Remove custom recipe from calendar.
 
@@ -3163,7 +3164,7 @@ class Cookidoo:
                 recipe=recipe_id,
             )
             async with self._session.delete(
-                url, headers=self._api_headers, params={"recipeSource": "CUSTOMER"}
+                    url, headers=self._api_headers, params={"recipeSource": "CUSTOMER"}
             ) as r:
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
