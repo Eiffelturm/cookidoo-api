@@ -238,11 +238,14 @@ class CookidooRecipeNutrition:
 
 @dataclass
 class CookidooRecipeStep:
-    """Recipe nutrition type.
+    """Recipe step type.
 
     Attributes
     ----------
-    TODO
+    title
+        The step number
+    formatted_text : str
+        The instruction text with HTML formatting
 
     """
 
@@ -268,7 +271,7 @@ class CookidooNutritionGroup:
 
 
 @dataclass
-class CookidooStepGroup:
+class CookidooRecipeStepGroup:
     """Step group type.
 
     Attributes
@@ -276,7 +279,7 @@ class CookidooStepGroup:
     title
         The title of the step group
     recipe_steps
-        List of recipe nutrition objects
+        List of recipe step objects
 
     """
 
@@ -320,7 +323,7 @@ class CookidooShoppingRecipeDetails(CookidooShoppingRecipe):
     active_time: int
     total_time: int
     nutrition_groups: list[CookidooNutritionGroup]
-    step_groups: list[CookidooStepGroup]
+    step_groups: list[CookidooRecipeStepGroup]
 
 
 @dataclass

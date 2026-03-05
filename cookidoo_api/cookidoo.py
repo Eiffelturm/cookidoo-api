@@ -512,7 +512,6 @@ class Cookidoo:
                 **self._cfg.localization.__dict__, id=id
             )
             async with self._session.get(url, headers=self._api_headers) as r:
-                _LOGGER.error("JSON %s", await r.json())
                 _LOGGER.debug(
                     "Response from %s [%s]: %s", url, r.status, await r.text()
                 )

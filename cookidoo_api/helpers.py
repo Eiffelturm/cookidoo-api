@@ -45,7 +45,7 @@ from cookidoo_api.types import (
     CookidooShoppingRecipe,
     CookidooShoppingRecipeDetails,
     CookidooSubscription,
-    CookidooUserInfo, CookidooStepGroup, CookidooRecipeStep,
+    CookidooUserInfo, CookidooRecipeStepGroup, CookidooRecipeStep,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -302,11 +302,17 @@ def cookidoo_recipe_details_from_json(
             )
             for ng in recipe.get("nutritionGroups", [])
         ],
-        step_groups=[CookidooStepGroup(
-            title=sg["title"],
-            recipe_steps=[CookidooRecipeStep(title=rs["title"], formatted_text=rs["formattedText"]) for rs in
-                          sg["recipeSteps"]]
-        ) for sg in recipe.get("recipeStepGroups", [])],
+        step_groups=[
+            CookidooRecipeStepGroup(
+                title=sg["title"],
+                recipe_steps=[
+                    CookidooRecipeStep(
+                        title=rs["title"],
+                        formatted_text=rs["formattedText"]
+                    )
+                    for rs in sg["recipeSteps"]]
+            )
+            for sg in recipe.get("recipeStepGroups", [])],
         thumbnail=thumbnail,
         image=image,
         url=url,
